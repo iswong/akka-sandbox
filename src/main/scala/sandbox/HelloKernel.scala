@@ -1,8 +1,8 @@
 package sandbox
 
-import akka.actor.Actor.Receive
-import akka.actor.{Props, ActorLogging, Actor, ActorSystem}
+import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.kernel.Bootable
+import akka.routing.SmallestMailboxPool
 import com.typesafe.config.ConfigFactory
 
 /**
@@ -15,7 +15,9 @@ class HelloKernel extends Bootable {
   implicit val system = ActorSystem()
 
   override def startup(): Unit = {
-    system.actorOf(Props[WorkerActor] withRouter())
+    val worker = system.actorOf(Props[WorkerActor]
+      withRouter(SmallestMailboxPool(nrOfInstances = 4)))
+    worker ! Request(9)
   }
 
   override def shutdown(): Unit = {
@@ -28,7 +30,7 @@ case class Result(y: Int)
 
 class WorkerActor extends Actor with ActorLogging {
   override def receive: Receive = {
-    case Request(r) => 
-      sender ! Result(r)
+    case Request(r) =>
+      log.info("Hihi")
   }
 }

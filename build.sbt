@@ -1,3 +1,6 @@
+import sbt.Keys._
+import sbt._
+
 name := "akka-sandbox"
 
 version := "1.0"
@@ -13,7 +16,5 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" % "akka-actor_2.11" % "2.3.9",
   "com.typesafe.akka" % "akka-kernel_2.11" % "2.3.9"
 )
-
-enablePlugins(JavaServerAppPackaging)
 
 mainClass in Compile := Some("akka.kernel.Main")
