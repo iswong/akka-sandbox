@@ -4,6 +4,7 @@ import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.kernel.Bootable
 import akka.routing.SmallestMailboxPool
 import com.typesafe.config.ConfigFactory
+import org.slf4j.LoggerFactory
 
 /**
  * Created by chriswong on 31/1/15.
@@ -11,12 +12,14 @@ import com.typesafe.config.ConfigFactory
 class HelloKernel extends Bootable {
 
   val config = ConfigFactory.load()
+  val log = LoggerFactory.getLogger(classOf[HelloKernel])
 
   implicit val system = ActorSystem()
 
   override def startup(): Unit = {
+    log.info("Starting up")
     val worker = system.actorOf(Props[WorkerActor]
-      withRouter(SmallestMailboxPool(nrOfInstances = 4)))
+      withRouter(SmallestMailboxPool(nrOfInstances = 4)), name = "Worker")
     worker ! Request(9)
   }
 
@@ -32,5 +35,6 @@ class WorkerActor extends Actor with ActorLogging {
   override def receive: Receive = {
     case Request(r) =>
       log.info("Hihi")
+      log.error(new RuntimeException("Test"), "Screw up")
   }
 }
