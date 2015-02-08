@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory
 /**
  * Created by chriswong on 31/1/15.
  */
-class HelloKernel extends Bootable {
+class HelloBootable extends Bootable {
 
   val config = ConfigFactory.load()
-  val log = LoggerFactory.getLogger(classOf[HelloKernel])
+  val log = LoggerFactory.getLogger(classOf[HelloBootable])
 
   implicit val system = ActorSystem()
 
